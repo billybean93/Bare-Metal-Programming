@@ -1,14 +1,12 @@
+#ifndef BITMAP_H
+#define BITMAP_H
 
 typedef unsigned int uint32_t;
-// The bitmap’s dimensions
-#define CAT_MEME_WIDTH  640
-#define CAT_MEME_HEIGHT 638
-
+// Bitmap dimensions
 #define CAT_DANCE_WIDTH 360
 #define CAT_DANCE_HEIGHT 640
 
-// Declare the array (defined in bitmap.c)
-
+// Declarations of individual bitmap data arrays
 extern const uint32_t cat_dance1[];
 extern const uint32_t cat_dance2[];
 extern const uint32_t cat_dance3[];
@@ -20,4 +18,10 @@ extern const uint32_t cat_dance8[];
 extern const uint32_t cat_dance9[];
 extern const uint32_t cat_dance10[];
 
+// Declaration of the array of pointers to the bitmaps
+extern const uint32_t *frames_order[];
+extern const int NUM_FRAMES;
 
+// The macro to get the number of frames
+
+#endif // CAT_DANCE_VIDEO_H

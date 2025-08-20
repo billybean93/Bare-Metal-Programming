@@ -3,11 +3,13 @@
 
 CFILES = $(wildcard ./kernel/*.c)
 BITMAPS  = $(wildcard ./bitmap/*.c)
+FONTS = $(wildcard ./font/*.c)
 # Include bitmap files in the build process
 # The bitmap files are compiled to object files and linked into the final binary
 # Without this, bitmap array would be undefined in kernel.c
 OFILES   = $(CFILES:./kernel/%.c=./build/%.o) \
-           $(BITMAPS:./bitmap/%.c=./build/%.o)
+           $(BITMAPS:./bitmap/%.c=./build/%.o) \
+		   $(FONTS:./font/%.c=./build/%.o)
 GCCFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib
 
 all: clean uart1_build  kernel8.img run1
@@ -20,6 +22,10 @@ uart1_build: ./uart/uart1.c
 
 # Compile bitmap data files
 ./build/%.o: ./bitmap/%.c
+	aarch64-none-elf-gcc $(GCCFLAGS) -c $< -o $@
+
+# Compile font data files
+./build/%.o: ./font/%.c
 	aarch64-none-elf-gcc $(GCCFLAGS) -c $< -o $@
 
 uart0_build: ./uart/uart0.c

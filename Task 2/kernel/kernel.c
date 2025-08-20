@@ -17,33 +17,35 @@ void main()
 
 	// Initialize frame buffer
 	framebf_init();
+	
+
+	// while (1){
+	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance1);
+	// 	delay(DELAY_COUNT); // Delay to see the first image
+	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance2);
+	// 	delay(DELAY_COUNT); // Delay to see the second image
+	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance3);
+	// 	delay(DELAY_COUNT); // Delay to see the third image
+	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance4);
+	// 	delay(DELAY_COUNT); // Delay to see the fourth image
+	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance5);
+	// 	delay(DELAY_COUNT); // Delay to see the fifth image
+	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance6);
+	// 	delay(DELAY_COUNT); // Delay to see the sixth image
+	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance7);
+	// 	delay(DELAY_COUNT); // Delay to see the seventh image
+	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance8);
+	// 	delay(DELAY_COUNT); // Delay to see the eighth image
+	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance9);
+	// 	delay(DELAY_COUNT); // Delay to see the ninth image
+	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance10);
+	// 	delay(DELAY_COUNT); // Delay to see the tenth image
+	// }
+	// Display the character 'A' at position (10, 20) in 12x16 font, white color
 
 
-	while (1){
-		drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance1);
-		delay(DELAY_COUNT); // Delay to see the first image
-		drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance2);
-		delay(DELAY_COUNT); // Delay to see the second image
-		drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance3);
-		delay(DELAY_COUNT); // Delay to see the third image
-		drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance4);
-		delay(DELAY_COUNT); // Delay to see the fourth image
-		drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance5);
-		delay(DELAY_COUNT); // Delay to see the fifth image
-		drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance6);
-		delay(DELAY_COUNT); // Delay to see the sixth image
-		drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance7);
-		delay(DELAY_COUNT); // Delay to see the seventh image
-		drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance8);
-		delay(DELAY_COUNT); // Delay to see the eighth image
-		drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance9);
-		delay(DELAY_COUNT); // Delay to see the ninth image
-		drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance10);
-		delay(DELAY_COUNT); // Delay to see the tenth image
-	}
-
-
-
+	// drawString(10, 50, "Hello, Font!", 0xFFFFFFFF, 10); // White	 color, zoom factor 1
+	display_video(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, frames_order, NUM_FRAMES, DELAY_COUNT);
 
 	// echo everything back
 	while(1) {

@@ -2,7 +2,8 @@
 #include "mbox.h"
 #include "../uart/uart0.h"
 #include "../uart/uart1.h"
-// #include "bitmap.h"
+#include "../font/font.h"
+
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
 
@@ -211,9 +212,48 @@ void drawBitmap(int x0, int y0, int width, int height, const uint32_t *bitmap) {
     }
 }
 
+void display_video(int x, int y, int width, int height, const uint32_t **frames, int num_frames, int delay_count) {
+    while (1) {
+        for (int i = 0; i < num_frames; i++) {
+            drawBitmap(x, y, width, height, frames[i]);
+            delay(delay_count);
+        }
+    }
+}
 
 
 
+void drawChar(unsigned char ch, int x, int y, unsigned int attr, int zoom)
+{
+    unsigned char *glyph = (unsigned char *)&font + (ch < FONT_NUMGLYPHS ? ch : 0) * FONT_BPG;
+
+    for (int i = 1; i <= (FONT_HEIGHT*zoom); i++) {
+		for (int j = 0; j< (FONT_WIDTH*zoom); j++) {
+			unsigned char mask = 1 << (j/zoom);
+            if (*glyph & mask) { //only draw pixels belong to the character glyph
+			    drawPixelARGB32(x + j, y + i, attr);
+            }
+		}
+		glyph += (i % zoom) ? 0 : FONT_BPL;
+    }
+}
+
+/* Functions to display image on the screen */
+void drawString(int x, int y, char *str, unsigned int attr, int zoom)
+{
+    while (*str) {
+        if (*str == '\r') {
+            x = 0;
+        } else if (*str == '\n') {
+            x = 0; 
+			y += (FONT_HEIGHT*zoom);
+        } else {
+            drawChar(*str, x, y, attr, zoom);
+            x += (FONT_WIDTH*zoom);
+        }
+        str++;
+    }
+}
 
 
 
