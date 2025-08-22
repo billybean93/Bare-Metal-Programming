@@ -5,6 +5,8 @@ typedef unsigned int uint32_t;
 // Bitmap dimensions
 #define CAT_DANCE_WIDTH 360
 #define CAT_DANCE_HEIGHT 640
+#define BACKGROUND_IMAGE_WIDTH 1024
+#define BACKGROUND_IMAGE_HEIGHT 669
 
 // Declarations of individual bitmap data arrays
 extern const uint32_t cat_dance1[];
@@ -17,6 +19,7 @@ extern const uint32_t cat_dance7[];
 extern const uint32_t cat_dance8[];
 extern const uint32_t cat_dance9[];
 extern const uint32_t cat_dance10[];
+extern const uint32_t background_img[];
 
 // Declaration of the array of pointers to the bitmaps
 extern const uint32_t *frames_order[];

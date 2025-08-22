@@ -18,34 +18,24 @@ void main()
 	// Initialize frame buffer
 	framebf_init();
 	
+	// display_video(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, frames_order, NUM_FRAMES, DELAY_COUNT);
 
-	// while (1){
-	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance1);
-	// 	delay(DELAY_COUNT); // Delay to see the first image
-	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance2);
-	// 	delay(DELAY_COUNT); // Delay to see the second image
-	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance3);
-	// 	delay(DELAY_COUNT); // Delay to see the third image
-	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance4);
-	// 	delay(DELAY_COUNT); // Delay to see the fourth image
-	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance5);
-	// 	delay(DELAY_COUNT); // Delay to see the fifth image
-	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance6);
-	// 	delay(DELAY_COUNT); // Delay to see the sixth image
-	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance7);
-	// 	delay(DELAY_COUNT); // Delay to see the seventh image
-	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance8);
-	// 	delay(DELAY_COUNT); // Delay to see the eighth image
-	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance9);
-	// 	delay(DELAY_COUNT); // Delay to see the ninth image
-	// 	drawBitmap(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, cat_dance10);
-	// 	delay(DELAY_COUNT); // Delay to see the tenth image
-	// }
-	// Display the character 'A' at position (10, 20) in 12x16 font, white color
+	//DISPLAY BACKGROUND IMAGE AND MEMBER INFO
+	drawBitmap(0, 0, BACKGROUND_IMAGE_WIDTH, BACKGROUND_IMAGE_HEIGHT,  background_img);
+	drawString(15, 680, "ANH NGUYEN", 0xFFFFFF, 2);
+	drawString(15, 700, "S3915181", 0xFFFFFF, 2);
 
+	drawString(200, 680, "TRONG TRUONG", 0xFFFFFF, 2);
+	drawString(200, 700, "S3872952", 0xFFFFFF, 2);
+	
+	drawString(426, 680, "TRIET TRAN", 0xFFFFFF, 2);
+	drawString(426, 700, "S3979253", 0xFFFFFF, 2);
 
-	// drawString(10, 50, "Hello, Font!", 0xFFFFFFFF, 10); // White	 color, zoom factor 1
-	display_video(100, 50, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, frames_order, NUM_FRAMES, DELAY_COUNT);
+	drawString(635, 680, "LAM NGUYEN", 0xFFFFFF, 2);
+	drawString(635, 700, "S3990403", 0xFFFFFF, 2);
+
+	drawString(855, 680, "NAM DINH", 0xFFFFFF, 2);
+	drawString(855, 700, "S3914547", 0xFFFFFF, 2);
 
 	// echo everything back
 	while(1) {
