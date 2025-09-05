@@ -16,14 +16,16 @@ void main()
 
 	// Initialize frame buffer
 	framebf_init();
-	Pipe pipe1 = { 400, 250 };  // x=400px, gap starts at y=250
+	Pipe pipe1 = { 400, 100 };  // x=400px, gap starts at y=250
 
 	
 	//DISPLAY BACKGROUND IMAGE
 	drawBitmap(0, 0, BACKGROUND_IMAGE_WIDTH, BACKGROUND_IMAGE_HEIGHT,  game_bg);
 
 	// draw the pipe
-	drawPipe(&pipe1, 0xFF00FF00);  // green
+	// drawPipe(&pipe1, 0xFF00FF00);  // green
+	drawPipe(&pipe1);
+
 	
 
 	// echo everything back

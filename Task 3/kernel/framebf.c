@@ -203,11 +203,31 @@ void drawLCircle(int center_x, int center_y, int radius, unsigned int attr, int 
         drawPixelARGB32(right_x, y, attr);
     }
 }
+// void drawBitmap(int x0, int y0, int width, int height, const uint32_t *bitmap) {
+//     for (int y = 0; y < height; y++) {
+//         for (int x = 0; x < width; x++) {
+//             unsigned long color = bitmap[y * width + x];
+            
+//             drawPixelARGB32(x0 + x, y0 + y, color);
+//         }
+//     }
+// }
+
 void drawBitmap(int x0, int y0, int width, int height, const uint32_t *bitmap) {
     for (int y = 0; y < height; y++) {
+
         for (int x = 0; x < width; x++) {
-            unsigned long color = bitmap[y * width + x];
-            drawPixelARGB32(x0 + x, y0 + y, color);
+
+            uint32_t color = bitmap[y * width + x];
+
+
+            //Only draw if alpha is not 0 (fully transparent)
+            if (color == 0x00ffffff ) {
+                continue; // Skip fully transparent pixels
+            } else {
+                drawPixelARGB32(x0 + x, y0 + y, color);
+            }
+            
         }
     }
 }
@@ -220,6 +240,22 @@ void display_video(int x, int y, int width, int height, const uint32_t **frames,
         }
     }
 }
+void drawBitmapFlipped(int x0, int y0, int width, int height, const uint32_t *bitmap) {
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            // read row from bottom instead of top
+            uint32_t color = bitmap[(height - 1 - y) * width + x];
+
+            if (color == 0x00ffffff) {
+                continue; // Skip transparent
+            } else {
+                drawPixelARGB32(x0 + x, y0 + y, color);
+            }
+        }
+    }
+}
+
+
 
 
 
