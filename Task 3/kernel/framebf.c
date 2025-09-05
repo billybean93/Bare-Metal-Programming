@@ -35,8 +35,8 @@ void framebf_init()
     mBuf[7] = MBOX_TAG_SETVIRTWH; //Set virtual width-height
     mBuf[8] = 8;
     mBuf[9] = 0;
-    mBuf[10] = 1024;
-    mBuf[11] = 768;
+    mBuf[10] = BACKGROUND_IMAGE_WIDTH;
+    mBuf[11] = BACKGROUND_IMAGE_HEIGHT;
 
     mBuf[12] = MBOX_TAG_SETVIRTOFF; //Set virtual offset
     mBuf[13] = 8;
