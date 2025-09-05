@@ -2,7 +2,7 @@
 #include "mbox.h"
 #include "../uart/uart0.h"
 #include "../uart/uart1.h"
-#include "../font/font.h"
+#include "../map/map.h"
 
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
@@ -29,8 +29,8 @@ void framebf_init()
     mBuf[2] = MBOX_TAG_SETPHYWH; //Set physical width-height
     mBuf[3] = 8; // Value size in bytes
     mBuf[4] = 0; // REQUEST CODE = 0
-    mBuf[5] = 1024; // Value(width)
-    mBuf[6] = 768; // Value(height)
+    mBuf[5] = BACKGROUND_IMAGE_WIDTH; // Value(width)
+    mBuf[6] = BACKGROUND_IMAGE_HEIGHT; // Value(height)
 
     mBuf[7] = MBOX_TAG_SETVIRTWH; //Set virtual width-height
     mBuf[8] = 8;
@@ -223,37 +223,7 @@ void display_video(int x, int y, int width, int height, const uint32_t **frames,
 
 
 
-void drawChar(unsigned char ch, int x, int y, unsigned int attr, int zoom)
-{
-    unsigned char *glyph = (unsigned char *)&font + (ch < FONT_NUMGLYPHS ? ch : 0) * FONT_BPG;
 
-    for (int i = 1; i <= (FONT_HEIGHT*zoom); i++) {
-		for (int j = 0; j< (FONT_WIDTH*zoom); j++) {
-			unsigned char mask = 1 << (j/zoom);
-            if (*glyph & mask) { //only draw pixels belong to the character glyph
-			    drawPixelARGB32(x + j, y + i, attr);
-            }
-		}
-		glyph += (i % zoom) ? 0 : FONT_BPL;
-    }
-}
-
-/* Functions to display image on the screen */
-void drawString(int x, int y, char *str, unsigned int attr, int zoom)
-{
-    while (*str) {
-        if (*str == '\r') {
-            x = 0;
-        } else if (*str == '\n') {
-            x = 0; 
-			y += (FONT_HEIGHT*zoom);
-        } else {
-            drawChar(*str, x, y, attr, zoom);
-            x += (FONT_WIDTH*zoom);
-        }
-        str++;
-    }
-}
 
 
 
