@@ -24,7 +24,11 @@ void main()
 
 	// draw the pipe
 	// drawPipe(&pipe1, 0xFF00FF00);  // green
-	drawPipe(&pipe1);
+	// drawPipe(pipe1);
+
+	Pipe pipes[3];
+	initPipes(pipes, 3);
+	drawPipes(pipes, 3);
 
 	
 
