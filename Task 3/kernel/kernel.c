@@ -18,27 +18,26 @@ void main()
 	framebf_init();
 	Pipe pipe1 = { 400, 100 };  // x=400px, gap starts at y=250
 
-	
-	//DISPLAY BACKGROUND IMAGE
-	drawBitmap(0, 0, BACKGROUND_IMAGE_WIDTH, BACKGROUND_IMAGE_HEIGHT,  game_bg);
-
-	// draw the pipe
-	// drawPipe(&pipe1, 0xFF00FF00);  // green
-	// drawPipe(pipe1);
 
 	Pipe pipes[3];
 	initPipes(pipes, 3);
-	drawPipes(pipes, 3);
-
+	int noBuff = 1; // Start with double buffering
 	
+	while (1) {
+    // Draw into back buffer
+		drawMap(pipes, 3, noBuff);
 
-	// echo everything back
-	while(1) {
-		//read each char
-		char c = uart_getc();
+		// Update game logic
+		updatePipes(pipes, 3);
 
-		//send back 
-		uart_sendc(c);
+		// Flip the buffer you just drew
+		swapBuffer(noBuff);
+
+		// Toggle buffer for next frame
+		noBuff = !noBuff;
+
+		delay(DELAY_COUNT);  // crude framerate control
 	}
+	
 }
 

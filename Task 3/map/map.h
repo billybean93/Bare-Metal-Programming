@@ -7,6 +7,7 @@ typedef unsigned int uint32_t;
 #define BACKGROUND_IMAGE_WIDTH 1024
 #define BACKGROUND_IMAGE_HEIGHT 770
 #define PIPE_WIDTH 80
+#define PIPE_SPEED 4
 #define PIPE_HEIGHT 492
 #define GAP_HEIGHT 150
 #define GROUND_HEIGHT 62   // adjust to match your ground image
@@ -23,9 +24,12 @@ typedef struct {
 
 extern const uint32_t game_bg[];
 extern const uint32_t pipe[];
-void drawPipe(Pipe p);
+void drawBackground(int noBuff);
+void drawPipe(Pipe p, int noBuff);
 void initPipes(Pipe pipes[], int num_pipes);
-void drawPipes(Pipe pipes[], int num_pipes);
+void drawPipes(Pipe pipes[], int num_pipes, int noBuff);
+void updatePipes(Pipe pipes[], int num_pipes);
+void drawMap(Pipe pipes[], int num_pipes, int noBuff);
 
 
 
