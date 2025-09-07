@@ -21,20 +21,20 @@ void main()
 
 	Pipe pipes[3];
 	initPipes(pipes, 3);
-	int noBuff = 1; // Start with double buffering
+	int bufferIndex = 1; // Start with double buffering
 	
 	while (1) {
     // Draw into back buffer
-		drawMap(pipes, 3, noBuff);
+		drawMap(pipes, 3, bufferIndex);
 
 		// Update game logic
 		updatePipes(pipes, 3);
 
 		// Flip the buffer you just drew
-		swapBuffer(noBuff);
+		swapBuffer(bufferIndex);
 
 		// Toggle buffer for next frame
-		noBuff = !noBuff;
+		bufferIndex = !bufferIndex;
 
 		delay(DELAY_COUNT);  // crude framerate control
 	}
