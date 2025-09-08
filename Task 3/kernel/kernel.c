@@ -3,7 +3,7 @@
 #include "mbox.h"
 #include "framebf.h"
 #include "../map/map.h"
-#define DELAY_COUNT 100000000
+#define DELAY_COUNT 1000000
 #define NUM_PIPES 10
 
 

@@ -7,12 +7,12 @@ typedef unsigned int uint32_t;
 #define BACKGROUND_IMAGE_WIDTH 1024
 #define BACKGROUND_IMAGE_HEIGHT 770
 #define PIPE_WIDTH 80
-#define PIPE_SPEED 4
+#define PIPE_SPEED 2
 #define PIPE_HEIGHT 492
 #define GAP_HEIGHT 150
 #define GROUND_HEIGHT 62   // adjust to match your ground image
 #define PIPE_SPACING 300   // horizontal distance between pipes
-#define RAND_SEED 450
+#define RAND_SEED 420
 /* Define registers based on their memory addresses 
     (can do here or in gpio.h so that we can also use in other places) */
 #define SYS_TIMER_CS  (* (volatile unsigned int*)(MMIO_BASE  + 0x00003000))
