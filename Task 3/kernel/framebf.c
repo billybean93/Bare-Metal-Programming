@@ -35,7 +35,7 @@ void framebf_init()
     mBuf[7] = MBOX_TAG_SETVIRTWH; //Set virtual width-height
     mBuf[8] = 8;
     mBuf[9] = 0;
-    mBuf[10] = BACKGROUND_IMAGE_WIDTH;
+    mBuf[10] = BACKGROUND_IMAGE_WIDTH * 100; // set a super long virtual width to accomodate multiple pipes
     mBuf[11] = BACKGROUND_IMAGE_HEIGHT * 2;
 
     mBuf[12] = MBOX_TAG_SETVIRTOFF; //Set virtual offset
@@ -259,8 +259,8 @@ void drawBitmapFlipped(int x0, int y0, int width, int height, const uint32_t *bi
 // If noBuff is true, it means we are using the top buffer.
 // If noBuff is false, we are using the bottom buffer.
 
-void swapBuffer(int noBuff) {
-    if (noBuff){
+void swapBuffer(int bufferIndex) {
+    if (bufferIndex){
 
         mBuf[0] = 8*4; // Length of message in bytes
         mBuf[1] = MBOX_REQUEST;
@@ -276,7 +276,7 @@ void swapBuffer(int noBuff) {
         mbox_call(ADDR(mBuf), MBOX_CH_PROP);
     }
     else{
-         mBuf[0] = 8*4; // Length of message in bytes
+        mBuf[0] = 8*4; // Length of message in bytes
         mBuf[1] = MBOX_REQUEST;
         
         mBuf[2] = MBOX_TAG_SETVIRTOFF; //Set virtual offset
