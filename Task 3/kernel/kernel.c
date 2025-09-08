@@ -3,7 +3,7 @@
 #include "mbox.h"
 #include "framebf.h"
 #include "../map/map.h"
-#define DELAY_COUNT 1000000
+#define WAIT_MSEC 50
 #define NUM_PIPES 10
 
 
@@ -49,7 +49,32 @@ void main()
 		// Toggle buffer for next frame
 		bufferIndex = !bufferIndex;
 
-		delay(DELAY_COUNT);  // crude framerate control
+		wait_msec(WAIT_MSEC); // Control frame rate
+
+	}
+	int level = 1;
+
+	while (1) {
+		switch (level)
+		{
+		case 1:
+			/* code */
+			break;
+
+		case 2:
+
+			/* code */
+			break;
+
+		case 3:
+
+			/* code */
+			break;
+		
+		default:
+			break;
+		}
+		// do nothing. can't return from main()
 	}
 
 	

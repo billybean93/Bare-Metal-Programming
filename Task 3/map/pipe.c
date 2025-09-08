@@ -40,7 +40,7 @@ void initPipes(Pipe pipes[], int num_pipes, unsigned int max, unsigned int min) 
         unsigned int gap_top = random(RAND_SEED); // Seed the random number generator
 
         pipes[i].gap_y = gap_top; // Vary gap_y for demonstration
-        delay(500);
+        wait_msec(10); // Small delay to get different random values
         
     }
 }
