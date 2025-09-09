@@ -3,6 +3,7 @@
 #include "../uart/uart0.h"
 #include "../uart/uart1.h"
 #include "../font/font.h"
+#include "../bitmap/bitmap.h"
 
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
@@ -254,6 +255,27 @@ void drawString(int x, int y, char *str, unsigned int attr, int zoom)
         str++;
     }
 }
+
+void drawBgAndNames(){
+    drawBitmap(0, 0, BACKGROUND_IMAGE_WIDTH, BACKGROUND_IMAGE_HEIGHT,  background_img);
+    drawString(15, 680, "ANH NGUYEN", 0xFFFFFF, 2);
+    drawString(15, 700, "S3915181", 0xFFFFFF, 2);
+
+    drawString(200, 680, "TRONG TRUONG", 0xFFFFFF, 2);
+    drawString(200, 700, "S3872952", 0xFFFFFF, 2);
+
+    drawString(426, 680, "TRIET TRAN", 0xFFFFFF, 2);
+    drawString(426, 700, "S3979253", 0xFFFFFF, 2);
+
+    drawString(635, 680, "LAM NGUYEN", 0xFFFFFF, 2);
+    drawString(635, 700, "S3990403", 0xFFFFFF, 2);
+
+    drawString(855, 680, "NAM DINH", 0xFFFFFF, 2);
+    drawString(855, 700, "S3914547", 0xFFFFFF, 2); 
+
+}
+
+
 
 
 
