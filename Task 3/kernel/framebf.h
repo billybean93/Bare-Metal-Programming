@@ -6,5 +6,7 @@ void drawLCircle(int center_x, int center_y, int radius, unsigned int attr, int 
 void drawBitmap(int x0, int y0, int width, int height, const uint32_t *bitmap) ;
 void drawBitmapFlipped(int x0, int y0, int width, int height, const uint32_t *bitmap);
 void swapBuffer(int bufferIndex);
+void changeMapColor() ;
+
 // ----------------------------------- framebf.h -------------------------------------
 
