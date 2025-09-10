@@ -66,6 +66,8 @@ while (playing) {
 
         drawBackground(bufferIndex);
         drawFinishedLv(bufferIndex);
+		swapBuffer(bufferIndex);
+		bufferIndex = !bufferIndex;	
 
         level = 3;
         initPipes(pipes, NUM_PIPES, GROUND_HEIGHT, BACKGROUND_IMAGE_HEIGHT);
@@ -83,6 +85,9 @@ while (playing) {
 
         drawBackground(bufferIndex);
         drawFinishedLv(bufferIndex);
+
+		swapBuffer(bufferIndex);
+		bufferIndex = !bufferIndex;	
 
         level = 1;  // loop back
         initPipes(pipes, NUM_PIPES, GROUND_HEIGHT, BACKGROUND_IMAGE_HEIGHT);
