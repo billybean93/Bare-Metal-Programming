@@ -132,6 +132,18 @@ void uart_dec(int num)
 	uart_puts(str);
 }
 
+/* New function for Uart: Check and return if no new character, don't wait */
+unsigned int uart_ReadByteReady(){
+	return (AUX_MU_LSR & 0x01);
+}
+
+unsigned char uart_read(){
+    unsigned char ch = 0;
+    if (uart_ReadByteReady())
+    	ch = uart_getc();
+    return ch;
+}
+
 void delay(unsigned long count) {
     while (count--) {
         asm volatile("nop");  // do nothing (one CPU cycle)

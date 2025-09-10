@@ -135,8 +135,39 @@ void drawMap(Pipe pipes[], int num_pipes, int bufferIndex) {
     }
 }
 
-// Function to draw the finish line with a checkerboard pattern
+void updateMap(int num_pipes, Pipe pipes[], int *bufferIndex, unsigned int msVal){
 
+        drawMap(pipes, num_pipes, *bufferIndex);
+
+        // Draw into back buffer
+
+        // Update game logic
+        updatePipes(pipes, num_pipes);
+
+        // Flip the buffer you just drew
+        swapBuffer(*bufferIndex);
+
+        // Toggle buffer for next frame
+        *bufferIndex = !(*bufferIndex);
+
+        wait_msec(msVal); // Control frame rate  
+
+}
+
+        // drawMap(pipes, NUM_PIPES, bufferIndex);
+
+        // // Draw into back buffer
+
+        // // Update game logic
+        // updatePipes(pipes, NUM_PIPES);
+
+        // // Flip the buffer you just drew
+        // swapBuffer(bufferIndex);
+
+        // // Toggle buffer for next frame
+        // bufferIndex = !bufferIndex;
+
+        // wait_msec(WAIT_MSEC); // Control frame rate
 
 
 

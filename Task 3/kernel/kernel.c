@@ -4,7 +4,7 @@
 #include "framebf.h"
 #include "../map/map.h"
 #define WAIT_MSEC 50
-#define NUM_PIPES 12
+#define NUM_PIPES 5
 
 void handleInput(){}
 void updateGame(){}
@@ -18,7 +18,7 @@ void main()
 
 	// Initialize frame buffer
 	framebf_init();
-	Pipe pipe1 = { 400, 70 };  
+	Pipe pipe1 = { 400, 70 };  // initialize one pipe to test
 	// Pipe data can't display below y = 70.
 
 
@@ -26,102 +26,75 @@ void main()
 	Pipe pipes[NUM_PIPES];
 	initPipes(pipes, NUM_PIPES, GROUND_HEIGHT ,BACKGROUND_IMAGE_HEIGHT );
 	int bufferIndex = 1; // Start with double buffering
-	// for (int i = 0; i < NUM_PIPES; i++) {
-	// 	uart_dec(random(50));
-		
-	// 	uart_puts("\n");
-	// 	delay(10000); // Small delay to get different random values
-	// }
-	// drawBackground(bufferIndex);
-	// drawPipe(pipe1, bufferIndex);
-   	
-	// Game loop
-	// while (pipes[NUM_PIPES - 1].x > 100) { // Continue until the last pipe goes off screen
-    // // Draw into back buffer
-	// 	drawMap(pipes, NUM_PIPES, bufferIndex);
-
-	// 	// Update game logic
-	// 	updatePipes(pipes, NUM_PIPES);
-
-	// 	// Flip the buffer you just drew
-	// 	swapBuffer(bufferIndex);
-
-	// 	// Toggle buffer for next frame
-	// 	bufferIndex = !bufferIndex;
-
-	// 	wait_msec(WAIT_MSEC); // Control frame rate
-
-	// }
-
-	
 	int level = 1;
-	int finished = 0;
 	int pipesFinished = 0;
-
-	while (1) {
-		switch (level)
-		{
-		case 1:
-			while(pipes[NUM_PIPES-1].x >= -(PIPE_WIDTH + 100)){
+	int playing = 1;
 	
-				drawMap(pipes, NUM_PIPES, bufferIndex);
+while (playing) {
+    switch (level) {
+    case 1:
+        // Show start screen for Level 1
+        while (!drawGameStart(&bufferIndex, uart_read())) {
+            // drawGameStart returns 1 when SPACE is pressed
+        }
 
-				// Draw into back buffer
+        // Run level 1
+        while (pipes[NUM_PIPES - 1].x >= -(PIPE_WIDTH + 50)) {
+            updateMap(NUM_PIPES, pipes, &bufferIndex, WAIT_MSEC);
+        }
 
-				// Update game logic
-				updatePipes(pipes, NUM_PIPES);
+        // Finished level
+        drawBackground(bufferIndex);
+        drawFinishedLv(bufferIndex);
+		swapBuffer(bufferIndex);
+		bufferIndex = !bufferIndex;	
 
-				// Flip the buffer you just drew
-				swapBuffer(bufferIndex);
+        level = 2;
+        initPipes(pipes, NUM_PIPES, GROUND_HEIGHT, BACKGROUND_IMAGE_HEIGHT);
+		wait_msec(1000);
+        break;
 
-				// Toggle buffer for next frame
-				bufferIndex = !bufferIndex;
+    case 2:
+		changeMapColor();
+        // Show start screen for Level 2
+        while (!drawGameStart(&bufferIndex, uart_read())) {}
 
-				wait_msec(WAIT_MSEC); // Control frame rate
-			}
-			finished = 1;
+        // Run level 2
+        while (pipes[NUM_PIPES - 1].x >= -(PIPE_WIDTH + 50)) {
+            updateMap(NUM_PIPES, pipes, &bufferIndex, WAIT_MSEC);
+        }
 
-			if (finished){
+        drawBackground(bufferIndex);
+        drawFinishedLv(bufferIndex);
 
-				level = 2;
-				finished = 0;
-			}
-			else {
+        level = 3;
+        initPipes(pipes, NUM_PIPES, GROUND_HEIGHT, BACKGROUND_IMAGE_HEIGHT);
+		wait_msec(10000);
+        break;
 
-			}
-			break;
+    case 3:
+		changeMapColor();
+        // Show start screen for Level 3
+        while (!drawGameStart(&bufferIndex, uart_read())) {}
 
-		case 2:
-			finished = 0;
-			changeMapColor();
-			if (finished){
+        while (pipes[NUM_PIPES - 1].x >= -(PIPE_WIDTH + 50)) {
+            updateMap(NUM_PIPES, pipes, &bufferIndex, WAIT_MSEC);
+        }
 
-				level = 3;
-				finished = 0;
-			}
-			else {
+        drawBackground(bufferIndex);
+        drawFinishedLv(bufferIndex);
 
-			}
-			break;
+        level = 1;  // loop back
+        initPipes(pipes, NUM_PIPES, GROUND_HEIGHT, BACKGROUND_IMAGE_HEIGHT);
 
-		case 3:
+        break;
 
-			if (finished){
+	default:
+		playing = 0;
+		break;
+    }
 
-				level = 1;
-				finished = 0;
-			}
-			else {
-
-			}
-			break;
-		
-		default:
-			break;
-		}
-		// do nothing. can't return from main()
-	}
-
+}
 	
 	
 }

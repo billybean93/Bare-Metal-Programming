@@ -3,6 +3,7 @@
 #include "../uart/uart0.h"
 #include "../uart/uart1.h"
 #include "../map/map.h"
+#include "../font/font.h"
 
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
@@ -306,6 +307,101 @@ void changeMapColor() {
     mBuf[6] = MBOX_TAG_LAST;
     // Call Mailbox
     mbox_call(ADDR(mBuf), MBOX_CH_PROP);
+}
+
+void drawChar(unsigned char ch, int x, int y, unsigned int attr, int zoom)
+{
+    unsigned char *glyph = (unsigned char *)&font + (ch < FONT_NUMGLYPHS ? ch : 0) * FONT_BPG;
+
+    for (int i = 1; i <= (FONT_HEIGHT*zoom); i++) {
+		for (int j = 0; j< (FONT_WIDTH*zoom); j++) {
+			unsigned char mask = 1 << (j/zoom);
+            if (*glyph & mask) { //only draw pixels belong to the character glyph
+			    drawPixelARGB32(x + j, y + i, attr);
+            }
+		}
+		glyph += (i % zoom) ? 0 : FONT_BPL;
+    }
+}
+
+/* Functions to display image on the screen */
+void drawString(int x, int y, char *str, unsigned int attr, int zoom)
+{
+    while (*str) {
+        if (*str == '\r') {
+            x = 0;
+        } else if (*str == '\n') {
+            x = 0; 
+			y += (FONT_HEIGHT*zoom);
+        } else {
+            drawChar(*str, x, y, attr, zoom);
+            x += (FONT_WIDTH*zoom);
+        }
+        str++;
+    }
+}
+
+void drawFinishedLv(int bufferIndex){
+    switch (bufferIndex)
+    {
+        case 1:
+            drawString(80, 280, "LEVEL FINISHED!!", 1, 7);
+        case 0: 
+            drawString(80, 280 + BACKGROUND_IMAGE_HEIGHT, "LEVEL FINISHED!!", 1, 7);
+    }
+}
+
+// int drawGameStart(int *bufferIndex, int *playing, char c){
+
+//     if (c == ' ') {
+//         *playing = !(*playing);
+//         return 1;
+
+//     }
+//     else 
+//     {
+//         drawBackground(*bufferIndex);
+//         switch (*bufferIndex)
+//         {
+//             case 1:
+//                 drawString(140, 300, "PRESS SPACE TO PLAY", 1, 5);
+//             case 0: 
+//                 drawString(140, 300 + BACKGROUND_IMAGE_HEIGHT, "PRESS SPACE TO PLAY", 1, 5);
+//         }
+//         swapBuffer(*bufferIndex);
+//         *bufferIndex = !(*bufferIndex);
+//         wait_msec(50);
+
+//     }
+
+int drawGameStart(int *bufferIndex, char c) {
+    if (c == ' ') {
+        return 1;   // signal "start game"
+    }
+    else {
+        drawBackground(*bufferIndex);
+
+        switch (*bufferIndex) {
+        case 1:
+            drawString(140, 300, "PRESS SPACE TO PLAY", 1, 5);
+            break;
+        case 0:
+            drawString(140, 300 + BACKGROUND_IMAGE_HEIGHT, "PRESS SPACE TO PLAY", 1, 5);
+            break;
+        }
+
+        swapBuffer(*bufferIndex);
+        *bufferIndex = !(*bufferIndex);
+
+        wait_msec(50);
+
+        return 0;   // still waiting
+    }
+}
+    
+
+void drawGoodLuck(int bufferIndex){
+
 }
    
 
