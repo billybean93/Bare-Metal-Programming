@@ -44,7 +44,7 @@ void drawPipes(Pipe pipes[], int num_pipes, int bufferIndex);
 void updatePipes(Pipe pipes[], int num_pipes);
 void drawMap(Pipe pipes[], int num_pipes, int bufferIndex);
 void drawFinishLine(int x, int bufferIndex);
-void updateMap(int num_pipes, Pipe pipes[], int *bufferIndex, unsigned int msVal);
+void updateMap(int num_pipes, Pipe pipes[], int *bufferIndex, unsigned int msVal, int fcount);
 
 
 

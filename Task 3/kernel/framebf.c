@@ -403,6 +403,91 @@ int drawGameStart(int *bufferIndex, char c) {
 void drawGoodLuck(int bufferIndex){
 
 }
+
+
+void clearScreen(unsigned int attr) {
+    // fill full screen
+    drawRectARGB32(0, 0, (int)width - 1, (int)height - 1, attr, 1);
+}
+void drawIndexedSprite(int x, int y, int w, int h,
+                       const unsigned char* data,
+                       const unsigned int* palette,
+                       int scale)
+{
+    if (scale < 1) scale = 1;
+    for (int j = 0; j < h; ++j) {
+        for (int i = 0; i < w; ++i) {
+            unsigned char idx = data[j * w + i];
+            if (idx == 0) continue; // 0 = transparent
+            unsigned int color = palette[idx];
+
+            // vẽ block scale x scale
+            for (int dy = 0; dy < scale; ++dy) {
+                for (int dx = 0; dx < scale; ++dx) {
+                    drawPixelARGB32(x + i*scale + dx, y + j*scale + dy, color);
+                }
+            }
+        }
+    }
+}
+// Bảng sin/cos rời rạc cho các góc: {-25,-10,0,30,70} độ, fixed-point ×1024
+static const int COS_TAB[5] = { 929, 1008, 1024, 887, 350 };
+static const int SIN_TAB[5] = {-432, -178,    0, 512, 962 };
+
+void drawIndexedSpriteRot(int x, int y, int w, int h,
+                          const unsigned char* data,
+                          const unsigned int* palette,
+                          int scale,
+                          int angle_idx)
+{
+    if (scale < 1) scale = 1;
+    if (angle_idx < 0) angle_idx = 0;
+    if (angle_idx > 4) angle_idx = 4;
+
+    const int c = COS_TAB[angle_idx];
+    const int s = SIN_TAB[angle_idx];
+    const int FP = 1024;
+
+    const int dstW = w * scale;
+    const int dstH = h * scale;
+    const int cx = dstW / 2;
+    const int cy = dstH / 2;
+
+    for (int dy = 0; dy < dstH; ++dy) {
+        for (int dx = 0; dx < dstW; ++dx) {
+            // tọa độ tương đối quanh tâm (pixel đích)
+            int rx = dx - cx;
+            int ry = dy - cy;
+
+            // ánh xạ ngược về nguồn (quay -theta)
+            // sx_scaled, sy_scaled đang ở “đơn vị” (scale * FP)
+            int sx_scaled =  c * rx + s * ry;   // (c*x + s*y)
+            int sy_scaled = -s * rx + c * ry;   // (-s*x + c*y)
+
+            // chia cho scale và FP để về đơn vị pixel nguồn
+            int sx = sx_scaled / (scale * FP) + (w / 2);
+            int sy = sy_scaled / (scale * FP) + (h / 2);
+
+            if ((unsigned)sx < (unsigned)w && (unsigned)sy < (unsigned)h) {
+                unsigned char idx = data[sy * w + sx];
+                if (idx) {
+                    drawPixelARGB32(x + dx, y + dy, palette[idx]);
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
    
 
 

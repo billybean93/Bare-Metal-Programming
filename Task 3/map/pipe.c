@@ -1,7 +1,7 @@
 #include "map.h"
 #include "../kernel/framebf.h"
 #include "../uart/uart1.h"
-
+#include "../bird/bird.h"
 
 // Simple linear congruential generator for pseudo-random numbers
 
@@ -135,7 +135,13 @@ void drawMap(Pipe pipes[], int num_pipes, int bufferIndex) {
     }
 }
 
-void updateMap(int num_pipes, Pipe pipes[], int *bufferIndex, unsigned int msVal){
+void updateMap(int num_pipes, Pipe pipes[], int *bufferIndex, unsigned int msVal, int fcount){
+        Bird bird = {
+            200,
+            200,
+            4,
+            4
+        };
 
         drawMap(pipes, num_pipes, *bufferIndex);
 
@@ -143,6 +149,7 @@ void updateMap(int num_pipes, Pipe pipes[], int *bufferIndex, unsigned int msVal
 
         // Update game logic
         updatePipes(pipes, num_pipes);
+        drawBird(bird.x, bird.y, *bufferIndex, fcount);
 
         // Flip the buffer you just drew
         swapBuffer(*bufferIndex);
