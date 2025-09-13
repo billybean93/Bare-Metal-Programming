@@ -110,25 +110,44 @@
 #include "framebf.h"
 #include "../map/map.h"
 #include "../bird/bird.h"
-#define WAIT_MSEC 50
-#define NUM_PIPES 10
+#define WAIT_MSEC 16 // 60 fps
+#define NUM_PIPES 12
 void main() {
     framebf_init();
 	uart_init();
 
 	Pipe pipes[NUM_PIPES];
+	Bird bird;
 	initPipes(pipes, NUM_PIPES, GROUND_HEIGHT ,BACKGROUND_IMAGE_HEIGHT );
+	initBird(&bird, 200, 200 );
+
 	int bufferIndex = 0; // Start with double buffering
 	int level = 1;
 	int playing = 1;
 	int frameCounter = 0;
 
+	unsigned long long last_tick = cntpct_el0();
+	double freq = (double)cntfrq_el0();
 
-    while (1) {
-        // draw background
-		frameCounter ++;
-		
-		updateMap(NUM_PIPES, pipes, bufferIndex, WAIT_MSEC, frameCounter);
 
-    }
+while (1) {
+	unsigned long long now = cntpct_el0();
+    double dt = (double)(now - last_tick) / freq;  // in seconds
+    last_tick = now;
+    frameCounter++;
+    char c = uart_read();
+
+    // Draw background and map
+    drawMap(pipes, NUM_PIPES, bufferIndex);
+	drawBird(bird.x, bird.y, bufferIndex, frameCounter);
+
+
+    // Update & draw bird
+    updateBird(&bird, c, dt);
+	updatePipes(pipes, NUM_PIPES);
+
+    swapBuffer(bufferIndex);
+    bufferIndex = !bufferIndex;
+    wait_msec(WAIT_MSEC);
+}
 }

@@ -3,11 +3,16 @@
 
 #define BIRD_WIDTH 34
 #define BIRD_HEIGHT 24
+#define GRAVITY 1500.0f
+#define JUMP_VELOCITY -420.0f    // upward velocity when space is pressed
+#define MAX_FALL       900.0f   // terminal velocity (fall speed cap)
+
 
 // Bird struct
 typedef struct {
-    int x;          // position X (top-left)
-    int y;          // position Y (top-left)
+    int x;          // position X (top-left)S
+    float y;          // position Y (top-left)
+    float vy;         // velocity
     int scale;      // scaling factor
     int alive;      // 1 = alive, 0 = dead (optional)
 } Bird;
