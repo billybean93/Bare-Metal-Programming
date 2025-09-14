@@ -4,6 +4,7 @@
 #include "../uart/uart1.h"
 #include "../map/map.h"
 #include "../font/font.h"
+#include "../bird/bird.h"
 
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
@@ -374,7 +375,7 @@ void drawFinishedLv(int bufferIndex){
 
 //     }
 
-int drawGameStart(int *bufferIndex, char c) {
+int drawGameStart(int *bufferIndex, char c, int fcount) {
     if (c == ' ') {
         return 1;   // signal "start game"
     }
@@ -384,11 +385,14 @@ int drawGameStart(int *bufferIndex, char c) {
         switch (*bufferIndex) {
         case 1:
             drawString(140, 300, "PRESS SPACE TO PLAY", 1, 5);
+
             break;
         case 0:
             drawString(140, 300 + BACKGROUND_IMAGE_HEIGHT, "PRESS SPACE TO PLAY", 1, 5);
+
             break;
         }
+        drawBird(200, 200, *bufferIndex, fcount);
 
         swapBuffer(*bufferIndex);
         *bufferIndex = !(*bufferIndex);
