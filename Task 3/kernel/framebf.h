@@ -1,6 +1,6 @@
 // ----------------------------------- framebf.h -------------------------------------
 typedef unsigned int uint32_t;
-int drawGameStart(int *bufferIndex, char c, int fcount);
+int drawGameStart(int *bufferIndex, char c, int fcount, int level);
 void drawFinishedLv(int bufferIndex);
 void framebf_init();
 void drawPixelARGB32(int x, int y, unsigned int attr);

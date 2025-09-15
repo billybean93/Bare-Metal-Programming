@@ -358,27 +358,51 @@ void drawARGBSpriteRot(int x, int y, int w, int h,
         }
     }
 }
-int drawGameStart(int *bufferIndex, char c, int fcount) {
+
+// Simple int-to-string converter
+void intToStr(int num, char *str) {
+    int i = 0;
+    char buf[12]; // enough for 32-bit int
+
+    if (num == 0) {
+        str[0] = '0';
+        str[1] = '\0';
+        return;
+    }
+
+    while (num > 0) {
+        buf[i++] = (num % 10) + '0';  // store digit as ASCII
+        num /= 10;
+    }
+
+    // reverse the string
+    for (int j = 0; j < i; j++) {
+        str[j] = buf[i - j - 1];
+    }
+    str[i] = '\0';
+}
+int drawGameStart(int *bufferIndex, char c, int fcount, int level) {
+    char lvlStr[16];
+    intToStr(level, lvlStr);   // convert int → string
+
     if (c == ' ') {
         return 1;   // signal "start game"
     } else {
         drawBackground(*bufferIndex);
 
-        switch (*bufferIndex) {
-            case 1:
-                drawString(140, 300, "PRESS SPACE TO PLAY", 1, 5);
-                break;
-            case 0:
-                drawString(140, 300 + BACKGROUND_IMAGE_HEIGHT, "PRESS SPACE TO PLAY", 1, 5);
-                break;
-        }
+        int y_coord = *bufferIndex ? 0 : BACKGROUND_IMAGE_HEIGHT;
+        drawString(140, 300 + y_coord, "PRESS SPACE TO PLAY", 1, 5);
+        drawString(350, 360 + y_coord, "LEVEL ", 1, 6);
+        drawString(600, 360 + y_coord, lvlStr, 1, 6);        // print number
 
-        // Vẽ 1 con chim ở giữa màn hình để demo
+    }
+
+        // Draw 1 bird at center
         Bird tempBird = {200, 200, 0};
 
         const unsigned int *sprite = (fcount / 10) % 2 == 0 ? bird_up : bird_down;
 
-        int angle_idx = 2; // thẳng (ANGLE_FLAT)
+        int angle_idx = 2; //(ANGLE_FLAT)
         if (*bufferIndex == 1) {
             drawARGBSpriteRot(tempBird.x, tempBird.y,
                               BIRD_WIDTH, BIRD_HEIGHT,
@@ -391,8 +415,8 @@ int drawGameStart(int *bufferIndex, char c, int fcount) {
 
         swapBuffer(*bufferIndex);
         *bufferIndex = !(*bufferIndex);
-        wait_msec(50);
+        wait_msec(16);
         return 0;
-    }
 }
+
 
