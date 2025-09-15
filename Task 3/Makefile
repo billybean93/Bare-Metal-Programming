@@ -15,6 +15,7 @@ GCCFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib
 all: clean uart1_build  kernel8.img run1
 uart1: clean uart1_build kernel8.img run1
 uart0: clean uart0_build kernel8.img run0
+mac: clean_mac uart1_build kernel8.img run_mac
 
 
 uart1_build: ./uart/uart1.c
@@ -45,9 +46,15 @@ kernel8.img: ./build/boot.o ./build/uart.o $(OFILES)
 clean:
 	del .\build\kernel8.elf .\build\*.o *.img
 
+clean_mac: 
+	rm -f ./build/kernel8.elf ./build/*.o *.img
+
 # Run emulation with QEMU
 run1: 
 	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial null -serial stdio
 
 run0: 
 	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial stdio
+
+run_mac: 
+	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -serial null -serial stdio
