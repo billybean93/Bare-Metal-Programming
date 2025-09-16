@@ -13,7 +13,6 @@ void initBird(Bird *bird, int x, int y) {
 void updateBird(Bird *bird, char input, double dt) {
     bird->vy += (int)(800 * dt);
     if (bird->vy > 600) bird->vy = 600;
-    if (input == ' ') bird->vy = -300;
 
     bird->y += (int)(bird->vy * dt);
 

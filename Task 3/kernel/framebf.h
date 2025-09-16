@@ -17,3 +17,4 @@ void drawIndexedSpriteRot(int x, int y, int w, int h,
                           int angle_idx);
 void drawARGBSpriteRot(int x, int y, int w, int h,
                        const unsigned int* data, int scale, int angle_idx);
+void drawString(int x, int y, char *str, unsigned int attr, int zoom);

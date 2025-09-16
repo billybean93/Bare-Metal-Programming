@@ -4,29 +4,39 @@
 #include "framebf.h"
 #include "../map/map.h"
 #include "../bird/bird.h"
+#include "timer.h"
 
-
-#define WAIT_MSEC 16 
+#define WAIT_MSEC 16 //60fps
 #define NUM_PIPES 5
 
+// Prototype
 static inline int collideBirdPipe(const Bird *bird, const Pipe *p);
 static inline int collideGround(const Bird *bird);
+void uart_dec_signed(int num);
+
 int runGameplayLoop(
-	Pipe pipes[], int num_pipes,
-	Bird *bird,
-	int *bufferIndex,
-	int *frameCounter,
-	char c, double dt
+    Pipe pipes[], int num_pipes,
+    Bird *bird,
+    int *bufferIndex,
+    int *frameCounter,
+    char c, double dt
 );
-int levelEnded(int num_pipes, Pipe pipes[]);
+
+// ---------------------- UART helper ----------------------
+void uart_dec_signed(int num) {
+    if (num < 0) {
+        uart_sendc('-');
+        num = -num;
+    }
+    uart_dec(num);
+}
 
 // ---------------------- Main Entry ----------------------
 void main(void) {
     uart_init();
-    uart_puts("\n\nHello World!\n");
+    uart_puts("\n\n[INFO] Game Started\n");
     framebf_init();
 
-	// ---------------------- Game Initialization ----------------------
     Pipe pipes[NUM_PIPES];
     Bird bird;
 
@@ -42,58 +52,57 @@ void main(void) {
     unsigned long long last_tick = cntpct_el0();
     double freq = (double)cntfrq_el0();
 
-	// ---------------------- Game Loop ----------------------
-
     while (playing) {
-		// Calculate time elapsed since last frame
         unsigned long long now = cntpct_el0();
         double dt = (double)(now - last_tick) / freq;
         last_tick = now;
-		// Read user input (non-blocking)
-        char c = uart_read();
-        frameCounter++; // for animation
 
-        // ---------------------- Start Screen ----------------------
+        char c = uart_read();
+        frameCounter++;
+
+        // Start screen
         if (!started) {
             if (drawGameStart(&bufferIndex, c, frameCounter, level)) {
                 started = 1;
+                uart_puts("[INFO] Level ");
+                uart_dec(level);
+                uart_puts(" Started\n");
             }
-            continue; // skip rest of loop until started
+            continue;
         }
-		if (pipes[NUM_PIPES- 1].x > -(PIPE_WIDTH)) {
-			if (!runGameplayLoop
-				(
-					pipes, NUM_PIPES, 
-					&bird,
-					&bufferIndex, 
-					&frameCounter,
-					c, 
-					dt
-				)
-				) 
 
-			{
-				started = 0;
-				level = 1; // reset to level 1 on game over
-				continue;
-			}
-		} else {
-			// ---- Level Finished ----
-			level++;
-			started = 0;
-			drawFinishedLv(bufferIndex);
-			swapBuffer(bufferIndex);
-			bufferIndex = !bufferIndex;
+        if (pipes[NUM_PIPES - 1].x > -(PIPE_WIDTH)) {
+            if (!runGameplayLoop(
+                    pipes, NUM_PIPES,
+                    &bird,
+                    &bufferIndex,
+                    &frameCounter,
+                    c, dt)) {
+                started = 0;
+                level = 1;
+                uart_puts("[WARN] GAME OVER, Reset to Level 1\n");
+                continue;
+            }
+        } else {
+            level++;
+            started = 0;
 
-			initPipes(pipes, NUM_PIPES, GROUND_HEIGHT, BACKGROUND_IMAGE_HEIGHT);
-			wait_msec(2000);
+            uart_puts("[INFO] Level Finished, Next Level: ");
+            uart_dec(level);
+            uart_puts("\n");
 
-			initBird(&bird, 200, 200);
-		}
-	}
+            drawFinishedLv(bufferIndex);
+            swapBuffer(bufferIndex);
+            bufferIndex = !bufferIndex;
+
+            initPipes(pipes, NUM_PIPES, GROUND_HEIGHT, BACKGROUND_IMAGE_HEIGHT);
+            wait_msec(2000);
+            initBird(&bird, 200, 200);
+        }
+    }
 }
 
-
+// ---------------------- Gameplay Loop ----------------------
 int runGameplayLoop(
     Pipe pipes[], int num_pipes,
     Bird *bird,
@@ -101,14 +110,34 @@ int runGameplayLoop(
     int *frameCounter,
     char c, double dt
 ) {
-    // Draw map and bird
     drawMap(pipes, num_pipes, *bufferIndex);
     drawBird(bird, *bufferIndex, *frameCounter);
 
     updatePipes(pipes, num_pipes);
-    updateBird(bird, c, dt);
 
-    // ---- Collision check ----
+    // Handle SPACE input
+    if (c == ' ') {
+        int oldVy = bird->vy;
+        int oldY  = bird->y;
+
+        if (bird->vy > -200) {
+            bird->vy = -300;  // Jump
+            uart_puts("[ACTION] Bird Jumped (Y=");
+            uart_dec(oldY);
+            uart_puts(" Vy=");
+            uart_dec_signed(oldVy);
+            uart_puts(")\n");
+        } else {
+            uart_puts("[ERROR] Jump Pressed but No Jump Happened!\n");
+            uart_puts("  Bird Y = "); uart_dec(oldY);
+            uart_puts(" Vy = "); uart_dec_signed(oldVy);
+            uart_puts("\n");
+        }
+    }
+
+    updateBird(bird, 0, dt);
+
+    // Collision detection
     int hit = 0;
     for (int i = 0; i < num_pipes; i++) {
         if (collideBirdPipe(bird, &pipes[i])) { hit = 1; break; }
@@ -116,26 +145,23 @@ int runGameplayLoop(
     if (!hit && collideGround(bird)) hit = 1;
 
     if (hit) {
-        // GAME OVER
         drawString(180, *bufferIndex ? 300 : 300 + BACKGROUND_IMAGE_HEIGHT,
                    "GAME OVER", 1, 6);
         swapBuffer(*bufferIndex);
         *bufferIndex = !(*bufferIndex);
         wait_msec(1200);
 
-        // Reset state
+        uart_puts("[ERROR] Collision Detected\n");
+
         initBird(bird, 200, 200);
         initPipes(pipes, num_pipes, GROUND_HEIGHT, BACKGROUND_IMAGE_HEIGHT);
-
-        return 0; // signal "game over"
+        return 0;
     }
 
-    // Swap buffer to display the frame
     swapBuffer(*bufferIndex);
-    *bufferIndex = !(*bufferIndex);
+    *bufferIndex = !*bufferIndex;
     wait_msec(WAIT_MSEC);
-
-    return 1; // still playing
+    return 1;
 }
 
 // ---------------------- Collision Check ----------------------
@@ -147,8 +173,8 @@ static inline int collideBirdPipe(const Bird *bird, const Pipe *p) {
     int bot_y1 = p->gap_y + GAP_HEIGHT;
 
     if (bx2 > px1 && bx1 < px2) {
-        if (by1 < top_y2) return 1;  // touch the upper tube
-        if (by2 > bot_y1) return 1;  // touch the lower tube
+        if (by1 < top_y2) return 1;
+        if (by2 > bot_y1) return 1;
     }
     return 0;
 }
