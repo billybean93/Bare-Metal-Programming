@@ -37,9 +37,9 @@ void drawPipes(Pipe pipes[], int num_pipes, int bufferIndex) {
     }
 }
 
-void updatePipes(Pipe pipes[], int num_pipes) {
+void updatePipes(Pipe pipes[], int num_pipes, int speed) {
     for (int i = 0; i < num_pipes; i++)
-        pipes[i].x -= PIPE_SPEED;
+        pipes[i].x -= speed;
 }
 
 void drawBackground(int bufferIndex) {

@@ -7,7 +7,7 @@
 #include "timer.h"
 
 #define WAIT_MSEC 16 //60fps
-#define NUM_PIPES 5
+#define NUM_PIPES 10
 
 // Prototype
 static inline int collideBirdPipe(const Bird *bird, const Pipe *p);
@@ -19,7 +19,7 @@ int runGameplayLoop(
     Bird *bird,
     int *bufferIndex,
     int *frameCounter,
-    char c, double dt
+    char c, double dt, int level
 );
 
 // ---------------------- UART helper ----------------------
@@ -77,7 +77,7 @@ void main(void) {
                     &bird,
                     &bufferIndex,
                     &frameCounter,
-                    c, dt)) {
+                    c, dt, level)) {
                 started = 0;
                 level = 1;
                 uart_puts("[WARN] GAME OVER, Reset to Level 1\n");
@@ -108,12 +108,12 @@ int runGameplayLoop(
     Bird *bird,
     int *bufferIndex,
     int *frameCounter,
-    char c, double dt
+    char c, double dt, int level
 ) {
     drawMap(pipes, num_pipes, *bufferIndex);
     drawBird(bird, *bufferIndex, *frameCounter);
 
-    updatePipes(pipes, num_pipes);
+    updatePipes(pipes, num_pipes, PIPE_SPEED + level);
 
     // Handle SPACE input
     if (c == ' ') {
@@ -146,7 +146,7 @@ int runGameplayLoop(
 
     if (hit) {
         drawString(180, *bufferIndex ? 300 : 300 + BACKGROUND_IMAGE_HEIGHT,
-                   "GAME OVER", 1, 6);
+                   "GAME OVER T.T", 1, 6);
         swapBuffer(*bufferIndex);
         *bufferIndex = !(*bufferIndex);
         wait_msec(1200);
