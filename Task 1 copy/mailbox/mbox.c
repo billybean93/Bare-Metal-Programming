@@ -79,61 +79,42 @@ int mbox_call(unsigned int buffer_addr, unsigned char channel)
 
     return 0;
 }
-
-void mbox_get_board_revision()
+uint32_t mbox_get_board_revision()
 {
-    //Set up a message to request the board revision
-    mBuf[0] = 7 * 4;         //Total size
-    mBuf[1] = MBOX_REQUEST;  //This is a request message
+    mBuf[0] = 7 * 4;
+    mBuf[1] = MBOX_REQUEST;
+    mBuf[2] = MBOX_TAG_GET_BOARD_REVISION;
+    mBuf[3] = 4;
+    mBuf[4] = 0;
+    mBuf[5] = 0;
+    mBuf[6] = MBOX_TAG_LAST;
 
-    mBuf[2] = MBOX_TAG_GET_BOARD_REVISION;  //Tag identifier
-    mBuf[3] = 4;                            //Max size of the buffer
-    mBuf[4] = 0;                            //Size of the data (response)
-    mBuf[5] = 0;                            //Space for the response (4 bytes)
-
-    mBuf[6] = MBOX_TAG_LAST;  //End tag
-
-    //Send the message to the GPU and wait for the response
     if (mbox_call((unsigned int)((unsigned long)&mBuf), MBOX_CH_PROP)) {
-        //The response should now be in mBuf[5]
-        uart_puts("Board Revision: ");
-        uart_hex(mBuf[5]);
-        uart_sendc('\n');
-    } else {
-        uart_puts("Unable to query board revision.\n");
+        return mBuf[5];
     }
+    return 0; // indicate failure
 }
 
-void mbox_get_mac(){
-    //Set up a message to request the MAC address
-    mBuf[0] = 8 * 4;         //Total size
-    mBuf[1] = MBOX_REQUEST;  //This is a request message
+int mbox_get_mac(uint8_t mac[6])
+{
+    mBuf[0] = 8 * 4;
+    mBuf[1] = MBOX_REQUEST;
+    mBuf[2] = MBOX_TAG_GET_MAC_ADDRESS;
+    mBuf[3] = 6;
+    mBuf[4] = 0;
+    mBuf[5] = 0;
+    mBuf[6] = 0;
+    mBuf[7] = MBOX_TAG_LAST;
 
-    mBuf[2] = MBOX_TAG_GET_MAC_ADDRESS;  //Tag identifier
-    mBuf[3] = 6;                         //Max size of the buffer
-    mBuf[4] = 0;                         //Size of the data (response)
-    mBuf[5] = 0;                         //Space for the response (first 4 bytes)
-    mBuf[6] = 0;                         //Space for the response (last 2 bytes)
-
-    mBuf[7] = MBOX_TAG_LAST;  //End tag
-
-    //Send the message to the GPU and wait for the response
     if (mbox_call((unsigned int)((unsigned long)&mBuf), MBOX_CH_PROP)) {
-        //The response should now be in mBuf[5] and mBuf[6]
-        uart_puts("MAC Address: ");
+        // Pack into the provided array
         for (int i = 0; i < 6; i++) {
-            if (i > 0) uart_sendc(':');
-            unsigned char byte;
-            if (i < 4) {
-                byte = (mBuf[5] >> (8 * (3 - i))) & 0xFF;
-            } else {
-                byte = (mBuf[6] >> (8 * (5 - i))) & 0xFF;
-            }
-            if (byte < 16) uart_sendc('0'); // Leading zero for single digit
-            uart_dec(byte);
+            if (i < 4)
+                mac[i] = (mBuf[5] >> (8 * (3 - i))) & 0xFF;
+            else
+                mac[i] = (mBuf[6] >> (8 * (5 - i))) & 0xFF;
         }
-        uart_sendc('\n');
-    } else {
-        uart_puts("Unable to query MAC address.\n");
+        return 0; // success
     }
+    return -1; // failure
 }

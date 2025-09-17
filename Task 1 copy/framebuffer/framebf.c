@@ -447,7 +447,7 @@ void adjustGameScreen() {
     mBuf[3] = 8;
     mBuf[4] = 0;
     mBuf[5] = BACKGROUND_IMAGE_WIDTH; // set virtual width to background image width
-    mBuf[6] = 770;
+    mBuf[6] = BACKGROUND_IMAGE_HEIGHT;
     mBuf[7] = MBOX_TAG_LAST;
     mbox_call(ADDR(mBuf), MBOX_CH_PROP);
 }

@@ -239,30 +239,23 @@ static int cmd_clear(int argc, char **argv)
     uart_puts("\033[2J\033[H");
     return 0;
 }
-
 static int cmd_showinfo(int argc, char **argv)
 {
-    uint32_t rev = 0;
-    uint8_t mac[6] = {0};
-    int ok1 = mbox_get_board_revision();
-    int ok2 = mbox_get_mac();
+    uint32_t rev = mbox_get_board_revision();
+    uint8_t mac[6];
+    int ok2 = mbox_get_mac(mac);
+
     uart_puts("Board revision: 0x");
-    put_hex32(rev);
-    if (ok1 != 0)
-        uart_puts(" (unavailable in QEMU)");
+    uart_hex(rev);
     uart_puts("\nMAC: ");
     if (ok2 == 0)
-    {
         put_mac(mac);
-    }
     else
-    {
         uart_puts("unavailable in QEMU");
-    }
     uart_puts("\n");
+
     return 0;
 }
-
 static int cmd_baudrate(int argc, char **argv)
 {
     if (argc != 2)
@@ -319,7 +312,7 @@ static int cmd_handshake(int argc, char **argv)
 static int cmd_task2(int argc, char **argv)
 {
     uart_puts("Task 2 placeholder. Use this later to launch image/video demo.\n");
-
+    adjustGameScreen();
     drawBgAndNames();
     return 0;
 }
@@ -335,6 +328,7 @@ static int cmd_task3(int argc, char **argv)
 static int cmd_game(int argc, char **argv)
 {   
     uart_puts("Starting the game...\n");
+    adjustGameScreen(); 
     game();
     return 0;
 }
@@ -377,11 +371,16 @@ void cli_run(void)
         {
             complete(buf, &len);
         }
-        else if (c == 0x7F || c == '\b')
+        else if (c == 0x7F || c == '\b' || c == 0x08)
         {
             if (len > 0)
             {
                 len--;
+
+
+
+
+
                 uart_puts("\b \b");
             }
         }
