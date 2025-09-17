@@ -1,8 +1,8 @@
 #include "../mailbox/mbox.h"
 #include "../uart/uart0.h"
-// #include "../map/map.h"
+#include "../map/map.h"
 #include "../font/font.h"
-// #include "../bird/bird.h"
+#include "../bird/bird.h"
 #include "../bitmap/bitmap.h"
 
 //Use RGBA32 (32 bits for each pixel)
@@ -30,8 +30,8 @@ void framebf_init()
     mBuf[2] = MBOX_TAG_SETPHYWH; //Set physical width-height
     mBuf[3] = 8; // Value size in bytes
     mBuf[4] = 0; // REQUEST CODE = 0
-    mBuf[5] = 1024; // Value(width)
-    mBuf[6] = 768; // Value(height)
+    mBuf[5] = BACKGROUND_IMAGE_WIDTH; // Value(width)
+    mBuf[6] = BACKGROUND_IMAGE_HEIGHT; // Value(height)
 
     mBuf[7] = MBOX_TAG_SETVIRTWH; //Set virtual width-height
     mBuf[8] = 8;
@@ -381,60 +381,82 @@ void intToStr(int num, char *str) {
     }
     str[i] = '\0';
 }
-// int drawGameStart(int *bufferIndex, char c, int fcount, int level) {
-//     char lvlStr[16];
-//     intToStr(level, lvlStr);   // convert int → string
+int drawGameStart(int *bufferIndex, char c, int fcount, int level) {
+    char lvlStr[16];
+    intToStr(level, lvlStr);   // convert int → string
 
-//     if (c == ' ') {
-//         return 1;   // signal "start game"
-//     } else {
-//         drawBackground(*bufferIndex);
+    if (c == ' ') {
+        return 1;   // signal "start game"
+    } else {
+        drawBackground(*bufferIndex);
 
-//         int y_coord = *bufferIndex ? 0 : BACKGROUND_IMAGE_HEIGHT;
-//         drawString(140, 300 + y_coord, "PRESS SPACE TO PLAY", 1, 5);
-//         drawString(350, 360 + y_coord, "LEVEL ", 1, 6);
-//         drawString(600, 360 + y_coord, lvlStr, 1, 6);        // print number
+        int y_coord = *bufferIndex ? 0 : BACKGROUND_IMAGE_HEIGHT;
+        drawString(140, 300 + y_coord, "PRESS SPACE TO PLAY", 1, 5);
+        drawString(350, 360 + y_coord, "LEVEL ", 1, 6);
+        drawString(600, 360 + y_coord, lvlStr, 1, 6);        // print number
 
-//     }
+    }
 
-//         // Draw 1 bird at center
-//         Bird tempBird = {200, 200, 0};
+        // Draw 1 bird at center
+        Bird tempBird = {200, 200, 0};
 
-//         const unsigned int *sprite = (fcount / 10) % 2 == 0 ? bird_up : bird_down;
+        const unsigned int *sprite = (fcount / 10) % 2 == 0 ? bird_up : bird_down;
 
-//         int angle_idx = 2; //(ANGLE_FLAT)
-//         if (*bufferIndex == 1) {
-//             drawARGBSpriteRot(tempBird.x, tempBird.y,
-//                               BIRD_WIDTH, BIRD_HEIGHT,
-//                               sprite, 1, angle_idx);
-//         } else {
-//             drawARGBSpriteRot(tempBird.x, tempBird.y + BACKGROUND_IMAGE_HEIGHT,
-//                               BIRD_WIDTH, BIRD_HEIGHT,
-//                               sprite, 1, angle_idx);
-//         }
+        int angle_idx = 2; //(ANGLE_FLAT)
+        if (*bufferIndex == 1) {
+            drawARGBSpriteRot(tempBird.x, tempBird.y,
+                              BIRD_WIDTH, BIRD_HEIGHT,
+                              sprite, 1, angle_idx);
+        } else {
+            drawARGBSpriteRot(tempBird.x, tempBird.y + BACKGROUND_IMAGE_HEIGHT,
+                              BIRD_WIDTH, BIRD_HEIGHT,
+                              sprite, 1, angle_idx);
+        }
 
-//         swapBuffer(*bufferIndex);
-//         *bufferIndex = !(*bufferIndex);
-//         wait_msec(16);
-//         return 0;
-// }
+        swapBuffer(*bufferIndex);
+        *bufferIndex = !(*bufferIndex);
+        wait_msec(16);
+        return 0;
+}
 
+void adjustVideoScreen() {
+    mBuf[0] = 8*4;
+    mBuf[1] = MBOX_REQUEST;
+    mBuf[2] = MBOX_TAG_SETPHYWH;
+    mBuf[3] = 8;
+    mBuf[4] = 0;
+    mBuf[5] = CAT_DANCE_WIDTH; // set virtual width to background image width
+    mBuf[6] = CAT_DANCE_HEIGHT;
+    mBuf[7] = MBOX_TAG_LAST;
+    mbox_call(ADDR(mBuf), MBOX_CH_PROP);
+}
+void adjustGameScreen() {
+    mBuf[0] = 8*4;
+    mBuf[1] = MBOX_REQUEST;
+    mBuf[2] = MBOX_TAG_SETPHYWH;
+    mBuf[3] = 8;
+    mBuf[4] = 0;
+    mBuf[5] = BACKGROUND_IMAGE_WIDTH; // set virtual width to background image width
+    mBuf[6] = 770;
+    mBuf[7] = MBOX_TAG_LAST;
+    mbox_call(ADDR(mBuf), MBOX_CH_PROP);
+}
 void drawBgAndNames(){
-    drawBitmap(0, 0, BACKGROUND_IMAGE_WIDTH, BACKGROUND_IMAGE_HEIGHT,  background_img);
+    drawBitmap(0, 0, BACKGROUND_IMAGE_WIDTH, 669,  background_img);
     drawString(15, 680, "ANH NGUYEN", 0xFFFFFF, 2);
     drawString(15, 700, "S3915181", 0xFFFFFF, 2);
 
-    drawString(200, 680, "TRONG TRUONG", 0xFFFFFF, 2);
-    drawString(200, 700, "S3872952", 0xFFFFFF, 2);
+    drawString(200, 680, "TRONG TRUONG", 0x747eaf, 2);
+    drawString(200, 700, "S3872952", 0x747eaf, 2);
 
-    drawString(426, 680, "TRIET TRAN", 0xFFFFFF, 2);
-    drawString(426, 700, "S3979253", 0xFFFFFF, 2);
+    drawString(426, 680, "TRIET TRAN", 0xefa3a3, 2);
+    drawString(426, 700, "S3979253", 0xefa3a3, 2);
 
-    drawString(635, 680, "LAM NGUYEN", 0xFFFFFF, 2);
-    drawString(635, 700, "S3990403", 0xFFFFFF, 2);
+    drawString(635, 680, "LAM NGUYEN", 0xe6d2a8, 2);
+    drawString(635, 700, "S3990403", 0xe6d2a8, 2);
 
-    drawString(855, 680, "NAM DINH", 0xFFFFFF, 2);
-    drawString(855, 700, "S3914547", 0xFFFFFF, 2); 
+    drawString(855, 680, "NAM DINH", 0xa8e6ce, 2);
+    drawString(855, 700, "S3914547", 0xa8e6ce, 2); 
 
 }
 

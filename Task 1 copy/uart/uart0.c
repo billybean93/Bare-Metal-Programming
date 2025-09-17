@@ -1,5 +1,6 @@
 #include "./uart0.h"
 #include "../mailbox/mbox.h"
+#include "../timer/timer.h"
 /* PL011 reference: 48MHz UARTCLK assumed */
 #define UARTCLK 48000000u
 
@@ -154,4 +155,15 @@ void uart_dec(int num)
 	str[len] = '\0';
 
 	uart_puts(str);
+}
+/* New function for Uart: Check and return if no new character, don't wait */
+unsigned int uart_ReadByteReady(){
+	return !(UART0_FR & UART0_FR_RXFE);
+}
+
+unsigned char uart_read(){
+    unsigned char ch = 0;
+    if (uart_ReadByteReady())
+    	ch = uart_getc();
+    return ch;
 }

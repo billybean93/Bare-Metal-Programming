@@ -6,7 +6,7 @@ typedef unsigned int uint32_t;
 #define CAT_DANCE_WIDTH 360
 #define CAT_DANCE_HEIGHT 640
 #define BACKGROUND_IMAGE_WIDTH 1024
-#define BACKGROUND_IMAGE_HEIGHT 669
+#define BACKGROUND_IMAGE_HEIGHT 770
 
 // Declarations of individual bitmap data arrays
 extern const uint32_t cat_dance1[];

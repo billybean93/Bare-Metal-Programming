@@ -1,3 +1,7 @@
+#ifndef FONT_H
+#define FONT_H
+
+
 enum {
     FONT_WIDTH     = 8,  // Width in pixels
     FONT_HEIGHT    = 8,  // Height in pixel
@@ -232,3 +236,4 @@ unsigned char font[FONT_NUMGLYPHS][FONT_BPG] = {
     { 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0},   // U+2590 (right half)
     { 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00},   // U+2580 (top half)
 };
+#endif

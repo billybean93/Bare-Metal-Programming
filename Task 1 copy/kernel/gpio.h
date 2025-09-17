@@ -46,7 +46,4 @@
 /* Provide delay() only once even if gpio.h is included multiple times */
 #ifndef DELAY_INLINE
 #define DELAY_INLINE
-static inline void delay(int32_t count) {
-    while (count-- > 0) { asm volatile("nop"); }
-}
 #endif

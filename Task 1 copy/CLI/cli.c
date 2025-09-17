@@ -6,6 +6,7 @@
 // #include "../font/font.h"
 #include "../framebuffer/framebf.h"
 #include "../bitmap/bitmap.h"
+#include "../game/game.h"
 
 #define PROMPT "MyOS> "
 #define MAX_LINE 128
@@ -29,6 +30,7 @@ static int cmd_baudrate(int argc, char **argv);
 static int cmd_handshake(int argc, char **argv);
 static int cmd_task2(int argc, char **argv);
 static int cmd_task3(int argc, char **argv);
+static int cmd_game(int argc, char **argv);
 
 static command_t commands[] = {
     {"help", "help [cmd] - Show help", cmd_help},
@@ -38,6 +40,7 @@ static command_t commands[] = {
     {"handshake", "handshake <on|off> - Enable/disable CTS/RTS", cmd_handshake},
     {"task2", "task2 - Run Task 2 demo (placeholder)", cmd_task2},
     {"task3", "task3 - Run Task 3 demo (placeholder)", cmd_task3},
+    {"game", "game - Play Flappy Bird game", cmd_game},
 };
 static const int NCMDS = sizeof(commands) / sizeof(commands[0]);
 
@@ -323,8 +326,16 @@ static int cmd_task2(int argc, char **argv)
 static int cmd_task3(int argc, char **argv)
 {
     uart_puts("Task 3 placeholder. Use this later to launch the game.\n");
+    adjustVideoScreen();
     display_video(0, 0, CAT_DANCE_WIDTH, CAT_DANCE_HEIGHT, frames_order, NUM_FRAMES, 100000000);
 
+    return 0;
+}
+
+static int cmd_game(int argc, char **argv)
+{   
+    uart_puts("Starting the game...\n");
+    game();
     return 0;
 }
 
