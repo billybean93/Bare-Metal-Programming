@@ -174,10 +174,20 @@ void drawBitmap(int x0, int y0, int width, int height, const uint32_t *bitmap) {
 }
 
 void display_video(int x, int y, int width, int height, const uint32_t **frames, int num_frames, int delay_count) {
+    uart_puts("[Press 'x' or 'X' to stop video]\n");
+
     while (1) {
         for (int i = 0; i < num_frames; i++) {
             drawBitmap(x, y, width, height, frames[i]);
             delay(delay_count);
+
+            if (uart_has_char()) {
+                char c = uart_getc_nowait();
+                if (c == 'x' || c == 'X') {
+                    uart_puts("\nVideo stopped by user.\n");
+                    return;
+                }
+            }
         }
     }
 }

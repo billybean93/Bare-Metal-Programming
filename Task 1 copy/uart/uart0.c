@@ -167,3 +167,15 @@ unsigned char uart_read(){
     	ch = uart_getc();
     return ch;
 }
+
+int uart_has_char(void) {
+    return !(UART0_FR & (1 << 4)); // RXFE == 0 means char is available
+}
+
+char uart_getc_nowait(void) {
+    if (uart_has_char()) {
+        char c = (char)(UART0_DR & 0xFF);
+        return (c == '\r') ? '\n' : c;
+    }
+    return 0; // or use -1 or '\0' as sentinel
+}
