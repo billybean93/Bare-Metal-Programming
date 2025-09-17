@@ -23,7 +23,7 @@ static void print_welcome(void)
     uart_puts(" #     # #     # #    #  #          #     # #     #      \n");
     uart_puts(" ######  #     # #     # #######    #######  #####       \n");
     uart_puts("\n");
-    uart_puts("     Developed by Triet, Trong, Nam, Anh, Lam            \n");
+    uart_puts("     Developed by Group 07 – COSC Embedded Systems       \n");
     uart_puts("\n");
 }
 
