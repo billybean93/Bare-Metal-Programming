@@ -1,3 +1,4 @@
+# Refer to project for more information
 # Bare-Metal-Programming
 # Bare Metal OS - EEET2490 Group Assignment
 
