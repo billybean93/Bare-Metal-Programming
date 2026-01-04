@@ -1,4 +1,4 @@
-### Refer to project-report.pdf for more information
+`REFER TO "Group Assignment Report.pdf" FOR MORE INFORMATION`
 # Bare Metal OS - EEET2490 Group Assignment
 
 A bare metal operating system implementation for Raspberry Pi as part of RMIT University's EEET2490 - Embedded System: OS and Interfacing course.
